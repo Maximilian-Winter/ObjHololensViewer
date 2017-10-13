@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.VR.WSA;
-using HoloToolkit.Unity;
+
+//using HoloToolkit.Unity;
 
 public class ControlObject : MonoBehaviour {
-    private WorldAnchorManager worldAnchorManager;
+
+    //private WorldAnchorManager worldAnchorManager;
 
     [SerializeField]
     private bool isWorldAnchored;
-
+    private Vector3 originalScale;
     private Quaternion tempRotation;
     private Vector3 tempPosition;
     private bool changed;
@@ -16,7 +17,7 @@ public class ControlObject : MonoBehaviour {
     // Use this for initialization
     void Awake ()
     {
-        worldAnchorManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<WorldAnchorManager>(); // Add anchor
+        //worldAnchorManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<WorldAnchorManager>(); // Add anchor
         isWorldAnchored = false;
         changed = false;
     }
@@ -26,7 +27,7 @@ public class ControlObject : MonoBehaviour {
         if(!isWorldAnchored)
         {
             //worldAnchorManager.AttachAnchor(gameObject, gameObject.name);
-            gameObject.AddComponent<WorldAnchor>();
+            gameObject.AddComponent<UnityEngine.XR.WSA.WorldAnchor>();
             isWorldAnchored = true;
         }
     }
@@ -36,7 +37,7 @@ public class ControlObject : MonoBehaviour {
         if (isWorldAnchored)
         {
             //worldAnchorManager.RemoveAnchor(gameObject);
-            DestroyImmediate(gameObject.GetComponent<WorldAnchor>());
+            DestroyImmediate(gameObject.GetComponent<UnityEngine.XR.WSA.WorldAnchor>());
             isWorldAnchored = false;
         }
     }
@@ -68,8 +69,26 @@ public class ControlObject : MonoBehaviour {
         changed = true;
     }
 
-    public void ScaleObject(float scale)
+    public void ScaleObject(float factor)
     {
-        transform.localScale = new Vector3(0.001f, 0.001f, 0.001f) * scale;
+        transform.localScale = originalScale * factor;
+    }
+
+    public void SetScale(float scale)
+    {
+        originalScale = new Vector3(scale, scale, scale);
+        transform.localScale = originalScale;
+    }
+
+    public void HideObject()
+    {
+        Renderer renderer = GetComponentInChildren<Renderer>();
+        renderer.enabled = false;
+    }
+
+    public void ShowObject()
+    {
+        Renderer renderer = GetComponentInChildren<Renderer>();
+        renderer.enabled = true;
     }
 }

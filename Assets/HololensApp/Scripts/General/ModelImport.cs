@@ -8,20 +8,41 @@ using UnityEngine.UI;
 
 public class ModelImport : MonoBehaviour
 {
-    public float scale = 0.001f;
-    public bool isLoaded { get; set; }
-    
+   /* private float scale = 0.001f;
+    public float Scale
+    {
+        get
+        {
+            return scale;
+        }
+        set
+        {
+            scale = value;
+        }
+    }*/
+
     public Shader modelShader;
     private SmartObjImporter importer;
 
-    private SceneManager sceneManager;
+    public delegate void OnFileIsLoadedDelegate();
+    public event OnFileIsLoadedDelegate OnFileIsLoaded;
+
+    private FileImportManager fileImportManager;
 
     void Start()
     {
         importer = new SmartObjImporter();
-        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+    }
+ 
+    private void Awake()
+    {
+        fileImportManager = GameObject.Find("SceneManager").GetComponent<FileImportManager>();
+        fileImportManager.OnLoadFile += LoadModel;
+    }
 
-        isLoaded = false;
+    private void OnDisable()
+    {
+        fileImportManager.OnLoadFile -= LoadModel;
     }
 
     public void LoadModel(string filename)
@@ -36,12 +57,9 @@ public class ModelImport : MonoBehaviour
     {
         yield return importer.ImportFile();
         importer.sceneGameObject.transform.localPosition = Camera.main.transform.position + new Vector3(0.0f, 0.0f, -0.5f);
-        importer.sceneGameObject.transform.localScale = new Vector3(scale, scale, scale);
         importer.sceneGameObject.SetActive(true);
         importer.sceneGameObject.GetComponent<ControlObject>().AttachWorldAnchor();
-
-        sceneManager.EnableObjectControlUIPanel();
-        isLoaded = true;
+        OnFileIsLoaded();
         yield return null;
     }
 }

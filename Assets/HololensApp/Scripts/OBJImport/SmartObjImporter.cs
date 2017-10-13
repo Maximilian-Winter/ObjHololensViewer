@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
-
+using UnityEngine.Rendering;
 
 public class UnityMeshData
 {
@@ -93,7 +93,7 @@ public class SmartObjImporter
     private int triangleIndiciesCount;
 
     private const float MAX_TIME_PER_FRAME = 0.5f;
-    private const int MAX_VERTICES_PER_MESH = 63999;
+    private const int MAX_VERTICES_PER_MESH = 1000000;
     private const int MIN_POW_10 = -16;
     private const int MAX_POW_10 = 16;
     private const int NUM_POWS_10 = MAX_POW_10 - MIN_POW_10 + 1;
@@ -156,12 +156,13 @@ public class SmartObjImporter
         {
             Mesh mesh = new Mesh();
 
+            mesh.indexFormat = IndexFormat.UInt32;
             mesh.vertices = unityMeshData[meshIndex].vertices;
             mesh.uv = unityMeshData[meshIndex].uvs;
             mesh.normals = unityMeshData[meshIndex].normals;
             mesh.triangles = unityMeshData[meshIndex].triangleIndicies;
             mesh.colors32 = unityMeshData[meshIndex].verticeColors;
-
+            
             //mesh.RecalculateBounds();
 
             GameObject childGameObject = new GameObject("Mesh" + meshIndex);
@@ -489,104 +490,6 @@ public class SmartObjImporter
         }
 
     }
-    /*
-    private IEnumerator GetUnityMeshData(List<Vector3> vertices, List<Vector2> uvs, List<Vector3> normals, List<MeshFaceData> faceData)
-    {
-        int meshCount = 1;
-        if (triangleIndiciesCount > MAX_VERTICES_PER_MESH)
-        {
-            meshCount = triangleIndiciesCount / MAX_VERTICES_PER_MESH;
-
-            if (triangleIndiciesCount % MAX_VERTICES_PER_MESH > 0)
-            {
-                meshCount++;
-            }
-        }
-
-        unityMeshData = new UnityMeshData[meshCount];
-
-        for (int meshIndex = 0; meshIndex < meshCount; meshIndex++)
-        {
-            int meshFaceDataIndexOffset = 0;
-            for (int i = 0; i < meshIndex; i++)
-            {
-                meshFaceDataIndexOffset += MAX_VERTICES_PER_MESH;
-            }
-
-            int meshFaceDataCount = 0;
-
-            if (meshIndex == meshCount - 1)
-            {
-                meshFaceDataCount = triangleIndiciesCount % MAX_VERTICES_PER_MESH;
-            }
-            else
-            {
-                meshFaceDataCount = MAX_VERTICES_PER_MESH;
-            }
-
-            Dictionary<int, MeshFaceData> faceDic = new Dictionary<int, MeshFaceData>();
-
-            Dictionary<int, int> vertexDic = new Dictionary<int, int>();
-            Dictionary<int, int> normalsDic = new Dictionary<int, int>();
-            Dictionary<int, int> uvsDic = new Dictionary<int, int>();
-            Dictionary<int, Color32> colorsDic = new Dictionary<int, Color32>();
-            int[] newTriangles = new int[meshFaceDataCount];
-            int vertexCount = 0;
-
-            for (int i = 0; i < meshFaceDataCount; i++)
-            {
-                int vertexIndex = 0;
-                if (vertexDic.ContainsKey(faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1))
-                {
-                    vertexIndex = vertexDic[faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1];
-                }
-                else
-                {
-                    Color color = Color.gray;
-                    vertexIndex = vertexCount;
-                    vertexCount++;
-                    vertexDic.Add(faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1, vertexIndex);
-                    if (faceData[i + meshFaceDataIndexOffset].verticeIndexY >= 1)
-                    {
-                        uvsDic.Add(faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1, faceData[i + meshFaceDataIndexOffset].verticeIndexY - 1);
-                    }
-                    if (faceData[i + meshFaceDataIndexOffset].verticeIndexZ >= 1)
-                    {
-                        normalsDic.Add(faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1, faceData[i + meshFaceDataIndexOffset].verticeIndexZ - 1);
-                    }
-                    if (matDic.ContainsKey(faceData[i + meshFaceDataIndexOffset].materialName))
-                    {
-                        color = matDic[faceData[i + meshFaceDataIndexOffset].materialName].color;
-                    }
-
-                    colorsDic.Add(faceData[i + meshFaceDataIndexOffset].verticeIndexX - 1, color);
-                }
-
-                newTriangles[i] = vertexIndex;
-            }
-
-            Vector3[] newVerts = new Vector3[vertexCount];
-            Vector2[] newUVs = new Vector2[vertexCount];
-            Vector3[] newNormals = new Vector3[vertexCount];
-            Color32[] colors = new Color32[vertexCount];
-
-            vertexCount = 0;
-
-            foreach (var key in vertexDic.Keys)
-            {
-                newVerts[vertexCount] = vertices[key];
-                newUVs[vertexCount] = uvs[uvsDic[key]];
-                newNormals[vertexCount] = normals[normalsDic[key]];
-                colors[vertexCount] = colorsDic[key];
-
-                vertexCount++;
-            }
-            unityMeshData[meshIndex] = new UnityMeshData(newVerts, newUVs, newNormals, newTriangles, colors);
-        }
-
-        yield return null;
-    }
-    */
 
     private IEnumerator GetUnityMeshData(List<Vector3> vertices, List<Vector2> uvs, List<Vector3> normals, List<MeshFaceData> faceData)
     {
@@ -650,6 +553,7 @@ public class SmartObjImporter
 
         yield return null;
     }
+
     private float GetFloat(StringBuilder sb, ref int start, ref StringBuilder sbFloat)
     {
         sbFloat.Remove(0, sbFloat.Length);
