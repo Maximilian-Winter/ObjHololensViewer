@@ -5,5 +5,5 @@ After loading is finished the user can move and scale the model with the help of
 
 # Limitations:
 
--Only support OBJ files with vertex normals.
--Only assign "kd" color attribute from MTL files to the models.
+* Only support OBJ files with vertex normals.
+* Only assign "kd" color attribute from MTL files to the models.
