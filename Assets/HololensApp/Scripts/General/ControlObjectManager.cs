@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class ControlObjectManager : MonoBehaviour
 {
     private bool buttonPressed;
-    public Text zoomObjectUIText;
-    public Text inputSpeedUIText;
+    
+
 
     // UI elements to modify the object.
     public GameObject objectControlUIPanel;
@@ -21,10 +21,12 @@ public class ControlObjectManager : MonoBehaviour
     public Button moveDownButton;
     public Button rotateLeftButton;
     public Button rotateRightButton;
+    public Text speedUIText;
     public Button speedLarger;
     public Button speedSmaller;
-    public Button zoomIn;
-    public Button zoomOut;
+    public Text objectScaleUIText;
+    public Button scaleLarger;
+    public Button scaleSmaller;
 
     // UI elements to scale the object.
     public GameObject objectUnitScaleUIPanel;
@@ -58,8 +60,8 @@ public class ControlObjectManager : MonoBehaviour
         rotateRightButton.onClick.AddListener(OnClickRotateRight);
         speedLarger.onClick.AddListener(OnClickSpeedLarger);
         speedSmaller.onClick.AddListener(OnClickSpeedSmaller);
-        zoomIn.onClick.AddListener(OnClickZoomIn);
-        zoomOut.onClick.AddListener(OnClickZoomOut);
+        scaleLarger.onClick.AddListener(OnClickScaleLarger);
+        scaleSmaller.onClick.AddListener(OnClickScaleSmaller);
         micrometerButton.onClick.AddListener(OnClickUnitScaleMicrometer);
         millimeterButton.onClick.AddListener(OnClickUnitScaleMillimeter);
         centimeterButton.onClick.AddListener(OnClickUnitScaleCentimeter);
@@ -178,7 +180,7 @@ public class ControlObjectManager : MonoBehaviour
                     inputSpeedModifier += 0.25f;
                 else
                     inputSpeedModifier += 0.50f;
-                inputSpeedUIText.text = "Speed: " + inputSpeedModifier;
+                speedUIText.text = "Speed: " + inputSpeedModifier;
                 buttonPressed = true;
             }
         }
@@ -194,20 +196,20 @@ public class ControlObjectManager : MonoBehaviour
                     inputSpeedModifier -= 0.25f;
                 else
                     inputSpeedModifier -= 0.50f;
-                inputSpeedUIText.text = "Speed: " + inputSpeedModifier;
+                speedUIText.text = "Speed: " + inputSpeedModifier;
                 buttonPressed = true;
             }
         }
     }
 
-    void OnClickZoomIn()
+    void OnClickScaleLarger()
     {
         if (!buttonPressed)
         {
             if (scaleFactor < 100000)
             {
                 scaleFactor += (0.05f * inputSpeedModifier);
-                zoomObjectUIText.text = "Scale: " + scaleFactor;
+                objectScaleUIText.text = "Scale: " + scaleFactor;
                 ControlObject model = GameObject.Find(fileNameWithoutExtension).GetComponent<ControlObject>();
                 model.ScaleObject(scaleFactor);
                 buttonPressed = true;
@@ -215,14 +217,14 @@ public class ControlObjectManager : MonoBehaviour
         }
     }
 
-    void OnClickZoomOut()
+    void OnClickScaleSmaller()
     {
         if (!buttonPressed)
         {
             if (scaleFactor > 0.05f)
             {
                 scaleFactor -= (0.05f * inputSpeedModifier);
-                zoomObjectUIText.text = "Scale: " + scaleFactor;
+                objectScaleUIText.text = "Scale: " + scaleFactor;
                 ControlObject model = GameObject.Find(fileNameWithoutExtension).GetComponent<ControlObject>();
                 model.ScaleObject(scaleFactor);
                 buttonPressed = true;

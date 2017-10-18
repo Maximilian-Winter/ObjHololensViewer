@@ -156,7 +156,7 @@ public class SmartObjImporter
         {
             Mesh mesh = new Mesh();
 
-            mesh.indexFormat = IndexFormat.UInt32;
+            //mesh.indexFormat = IndexFormat.UInt32;
             mesh.vertices = unityMeshData[meshIndex].vertices;
             mesh.uv = unityMeshData[meshIndex].uvs;
             mesh.normals = unityMeshData[meshIndex].normals;

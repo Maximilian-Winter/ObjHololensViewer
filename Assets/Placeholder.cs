@@ -10,6 +10,18 @@ public class Placeholder : MonoBehaviour, IInputClickHandler
 {
     public Transform prefab;
 
+    public void OnInputClicked(InputClickedEventData eventData)
+    {
+        var instance = Instantiate(this.prefab);
+
+        instance.gameObject.transform.position =
+          GazeManager.Instance.GazeOrigin +
+          GazeManager.Instance.GazeNormal * 1.5f;
+
+        var tapToPlace = instance.gameObject.AddComponent<TapToPlace>();
+        //tapToPlace.SavedAnchorFriendlyName = (++this.count).ToString();
+    }
+    /*
     private void Start()
     {
         InputManager.Instance.PushFallbackInputHandler(
@@ -43,7 +55,7 @@ public class Placeholder : MonoBehaviour, IInputClickHandler
         var tapToPlace = instance.gameObject.AddComponent<TapToPlace>();
         tapToPlace.SavedAnchorFriendlyName = (++this.count).ToString();
     }
-
+    */
     bool loaded;
     int count;
 }
