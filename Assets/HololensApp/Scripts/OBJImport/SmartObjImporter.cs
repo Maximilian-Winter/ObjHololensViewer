@@ -93,7 +93,7 @@ public class SmartObjImporter
     private int triangleIndiciesCount;
 
     private const float MAX_TIME_PER_FRAME = 0.5f;
-    private const int MAX_VERTICES_PER_MESH = 1000000;
+    private const int MAX_VERTICES_PER_MESH = 63999;
     private const int MIN_POW_10 = -16;
     private const int MAX_POW_10 = 16;
     private const int NUM_POWS_10 = MAX_POW_10 - MIN_POW_10 + 1;
