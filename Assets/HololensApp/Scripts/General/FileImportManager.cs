@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+#if NETFX_CORE
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using System.Threading.Tasks;
+#endif
 
 public class FileImportManager : MonoBehaviour
 {
@@ -170,7 +177,6 @@ public class FileImportManager : MonoBehaviour
                              appDataFilePaths.Add(file.Path);
                          }
                      }
-                     isLoaded = true;
                  });
                 task.Start();
                 task.Wait();

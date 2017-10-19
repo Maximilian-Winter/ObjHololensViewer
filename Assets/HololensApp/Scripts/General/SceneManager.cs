@@ -9,11 +9,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-#if NETFX_CORE
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using System.Threading.Tasks;
-#endif
+
 namespace HololensApp
 {
     public class SceneManager : MonoBehaviour
