@@ -104,7 +104,7 @@ public class FileImportManager : MonoBehaviour
     }
 
 #if NETFX_CORE
-            private void PickHandler(IReadOnlyList<StorageFile> files)
+    private void PickHandler(IReadOnlyList<StorageFile> files)
             {
                 string objfilePath = "";
                 string mtlfilePath = "";
@@ -172,11 +172,13 @@ public class FileImportManager : MonoBehaviour
                      IReadOnlyList<StorageFile> sortedItems = await folder.GetFilesAsync();
                      foreach (StorageFile file in sortedItems)
                      {
-                         if (Path.GetExtension(file.Path) == ".obj")
+                         if (Path.GetExtension(file.Path) == ".obj" && !appDataFilePaths.Contains(file.Path))
                          {
                              appDataFilePaths.Add(file.Path);
                          }
                      }
+
+                     fileListLoaded = true;
                  });
                 task.Start();
                 task.Wait();
@@ -196,7 +198,7 @@ public class FileImportManager : MonoBehaviour
     void OnClickLoadFile()
     {
 #if NETFX_CORE
-                GetStorageFolderContent(ApplicationData.Current.RoamingFolder.Path);
+        GetStorageFolderContent(ApplicationData.Current.RoamingFolder.Path);
 #else
         GetHardDriveFolderContent(@basepath);
 #endif
